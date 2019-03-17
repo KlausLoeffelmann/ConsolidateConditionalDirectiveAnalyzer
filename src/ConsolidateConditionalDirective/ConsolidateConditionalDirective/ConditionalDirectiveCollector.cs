@@ -16,7 +16,7 @@ namespace ConsolidateConditionalDirective
         private int _ifDirectiveBoxLevel;
         private bool _searchEnded;
  
-        // Important to call the base constructor, so we can set the Depth, so we the SyntaxWalker will at all visit Trivia items.
+        // Important to call the base constructor, so we can set the Depth, so the SyntaxWalker will at all visit Trivia items.
         public ConditionalDirectiveCollector() : base(Microsoft.CodeAnalysis.SyntaxWalkerDepth.StructuredTrivia)
         {
         }

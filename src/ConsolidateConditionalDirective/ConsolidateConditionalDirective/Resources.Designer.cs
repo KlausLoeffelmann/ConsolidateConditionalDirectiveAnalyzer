@@ -62,7 +62,7 @@ namespace ConsolidateConditionalDirective {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consolidate conditional directive based on current compiler variable definition..
+        ///   Looks up a localized string similar to Consolidate conditional directive based on current conditional symbol definition..
         /// </summary>
         internal static string AnalyzerDescription {
             get {
@@ -71,7 +71,7 @@ namespace ConsolidateConditionalDirective {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Found #if conditional directoive to consolidate..
+        ///   Looks up a localized string similar to Found #if conditional directive to consolidate..
         /// </summary>
         internal static string AnalyzerMessageFormat {
             get {
