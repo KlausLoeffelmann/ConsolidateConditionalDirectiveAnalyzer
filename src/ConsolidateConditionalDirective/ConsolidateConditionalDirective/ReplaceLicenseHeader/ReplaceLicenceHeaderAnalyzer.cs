@@ -18,7 +18,11 @@ namespace ConsolidateConditionalDirective
         public const string DiagnosticId = "ReplaceLicenseHeader";
         public static readonly string LicenseHeader = @"// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.";
+// See the LICENSE file in the project root for more information.
+
+";
+
+        private static readonly string KeepPhraseTriggerWord = "Purpose:";
 
         private static readonly LocalizableString Title = "License Header Warning.";
         private static readonly LocalizableString MessageFormat = "Wrong or missing License header.";
@@ -58,13 +62,56 @@ namespace ConsolidateConditionalDirective
             else
             {
                 var leadingTrivia = root.GetFirstToken().LeadingTrivia;
+                SyntaxTrivia previousTrivia = default;
+                //var triggerTrivia = new List<SyntaxTrivia>();
+                string preserveTrivia = null;
+                var triggerTriviaInProgress = false;
+                int startSpan = 0, endSpan = 0;
+                char[] charsToTrim = { '*', ' ', '/' };
+                var comCrLf = "//" + System.Environment.NewLine;
 
-                if (leadingTrivia.ToString() != LicenseHeader)
+                if (leadingTrivia.Count > 0)
+                {
+                    foreach (var item in leadingTrivia)
+                    {
+                        var tempPhrase = item.ToString().Trim(charsToTrim);
+                        if (!triggerTriviaInProgress && tempPhrase.Contains(KeepPhraseTriggerWord))
+                        {
+                            triggerTriviaInProgress = true;
+                            startSpan = item.SpanStart;
+                        }
+
+                        if (triggerTriviaInProgress)
+                        {
+                            if (item.Kind() == SyntaxKind.EndOfLineTrivia)
+                            {
+                                previousTrivia = item;
+                                continue;
+                            }
+                            else if (string.IsNullOrWhiteSpace(item.ToString().Trim(charsToTrim)))
+                            {
+                                triggerTriviaInProgress = false;
+                                endSpan = previousTrivia.Span.End;
+                                preserveTrivia = System.Environment.NewLine + comCrLf +
+                                    leadingTrivia.ToString().Substring(startSpan, endSpan - startSpan) +
+                                    comCrLf + System.Environment.NewLine + System.Environment.NewLine;
+                                break;
+                            }
+                        }
+                        previousTrivia = item;
+                    }
+                }
+
+                if (!leadingTrivia.ToString().StartsWith(LicenseHeader))
                 {
                     var leadingTriviaLocation = Location.Create(context.Tree,
                         leadingTrivia.FullSpan);
 
                     props = props.Add("hasNoHeader", false.ToString());
+                    if (preserveTrivia != null)
+                    {
+                        props = props.Add(nameof(preserveTrivia),preserveTrivia );
+                    }
                     diagnostic = Diagnostic.Create(Rule, leadingTriviaLocation,
                         props);
 

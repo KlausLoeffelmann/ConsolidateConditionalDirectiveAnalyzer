@@ -18,7 +18,7 @@ namespace ConsolidateConditionalDirective
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ConsolidateConditionalDirectiveCodeFixProvider)), Shared]
     public class ReplaceLicenseHeaderCodeFixProvider : CodeFixProvider
     {
-        private const string title = "Consolidate to active branch.";
+        private const string title = "Replace with correct License text.";
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
@@ -39,15 +39,17 @@ namespace ConsolidateConditionalDirective
 
 
             var hasNoHeader = bool.Parse(diagnostic.Properties["hasNoHeader"]);
+            string preserveTrivia = string.Empty;
+            diagnostic.Properties.TryGetValue(nameof(preserveTrivia), out preserveTrivia);
 
             context.RegisterCodeFix(
-                CodeAction.Create(title, c => EnsureLicenseHeaderAsLeadingTrivia(context.Document, existingHeaderSpan, hasNoHeader, c),
+                CodeAction.Create(title, c => EnsureLicenseHeaderAsLeadingTrivia(context.Document, existingHeaderSpan, preserveTrivia, hasNoHeader, c),
                                   equivalenceKey: title),
                                   diagnostic);
         }
 
         private async Task<Solution> EnsureLicenseHeaderAsLeadingTrivia(Document document, 
-            TextSpan existingHeaderSpan, bool hasNoHeader, CancellationToken cancellationToken)
+            TextSpan existingHeaderSpan, string preserveTrigger, bool hasNoHeader, CancellationToken cancellationToken)
         {
             var sourceText = await document.GetTextAsync(cancellationToken);
             Solution originalSolution = document.Project.Solution;
@@ -61,8 +63,7 @@ namespace ConsolidateConditionalDirective
             }
             else
             {
-                TextChange tChange = new TextChange(existingHeaderSpan, ReplaceLicenseHeaderAnalyzer.LicenseHeader);
-                sourceText = sourceText.WithChanges(tChange);
+                sourceText = sourceText.Replace(TextSpan.FromBounds(0, existingHeaderSpan.End), ReplaceLicenseHeaderAnalyzer.LicenseHeader + preserveTrigger);
                 newSolution = originalSolution.WithDocumentText(document.Id, sourceText);
             }
 

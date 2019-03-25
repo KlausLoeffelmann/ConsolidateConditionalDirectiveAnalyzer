@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28711.60
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsolidateConditionalDirective", "ConsolidateConditionalDirective\ConsolidateConditionalDirective\ConsolidateConditionalDirective.csproj", "{521E498D-E350-43C5-B9A9-44D0C0B4CE50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsolidateConditionalDirective", "ConsolidateConditionalDirective\ConsolidateConditionalDirective\ConsolidateConditionalDirective.csproj", "{521E498D-E350-43C5-B9A9-44D0C0B4CE50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsolidateConditionalDirective.Test", "ConsolidateConditionalDirective\ConsolidateConditionalDirective.Test\ConsolidateConditionalDirective.Test.csproj", "{FE6598D0-00C8-4D04-B6D7-CB077E85AAC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsolidateConditionalDirective.Test", "ConsolidateConditionalDirective\ConsolidateConditionalDirective.Test\ConsolidateConditionalDirective.Test.csproj", "{FE6598D0-00C8-4D04-B6D7-CB077E85AAC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsolidateConditionalDirective.Vsix", "ConsolidateConditionalDirective\ConsolidateConditionalDirective.Vsix\ConsolidateConditionalDirective.Vsix.csproj", "{8D322411-B779-4542-9D35-A043527BE1EB}"
 EndProject
